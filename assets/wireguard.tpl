@@ -65,7 +65,7 @@ spec:
         app: wireguard
     spec:
       containers:
-      - image: linuxserver/wireguard
+      - image: linuxserver/wireguard:latest
         name: wireguard
         envFrom:
         - configMapRef:
@@ -74,11 +74,9 @@ spec:
         - containerPort: 51820
           protocol: UDP
         securityContext:
-          privileged: true
           capabilities:
             add:
             - NET_ADMIN
-            - NET_RAW
         volumeMounts:
         - name: wg-peer-config-vol
           mountPath: /config/peer1

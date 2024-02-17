@@ -3,11 +3,11 @@ output "public_ip" {
 }
 
 output wg_qrcode_url {
-  value     = "https://${var.domain_name}/peer1.conf"
+  value     = "https://${var.domain_name}/peer1.png"
 }
 
 output wg_config_url {
-  value     = "https://${var.domain_name}/peer1.png"
+  value     = "https://${var.domain_name}/peer1.conf"
 }
 
 output http_username {

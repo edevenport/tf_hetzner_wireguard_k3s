@@ -20,7 +20,7 @@ data:
   Caddyfile: |
     ${domain_name} {
       handle_path /* {
-        basicauth /* {
+        basicauth {
           wg ${http_password}
         }
         root * /usr/share/caddy
@@ -83,6 +83,7 @@ spec:
           mountPath: /data
         - name: wg-peer-config-vol
           mountPath: /usr/share/caddy
+          readOnly: true
       volumes:
       - name: caddy-config
         configMap:

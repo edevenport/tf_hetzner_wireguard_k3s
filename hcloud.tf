@@ -20,12 +20,10 @@ data "cloudinit_config" "cloud_config" {
           },
         ],
         "runcmd": [
-          "mkdir /etc/wireguard && chmod 0700 /etc/wireguard",
-          "mkdir -p /var/lib/rancher/k3s/server/manifests",
-          "chmod 700 /var/lib/rancher/k3s/server",
-          "chmod 700 /var/lib/rancher/k3s/server/manifests",
-          "sysctl -w net.ipv4.conf.all.src_valid_mark=1",
-          "curl -sfL https://get.k3s.io | sh -s - --disable=traefik"
+          "curl -sfL https://get.k3s.io | sh -s - --disable=traefik",
+          "echo 'alias k=kubectl' >> /root/.bashrc",
+          "echo 'source <(kubectl completion bash)' >> /root/.bashrc",
+          "echo 'complete -o default -F __start_kubectl k' >> /root/.bashrc"
         ]
       }
     )
@@ -38,7 +36,6 @@ data "cloudinit_config" "cloud_config" {
 resource "random_password" "caddy" {
   length           = 16
   special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
 }
 
 resource "hcloud_ssh_key" "default" {
