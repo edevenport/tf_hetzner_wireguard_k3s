@@ -21,11 +21,11 @@ data "cloudinit_config" "cloud_config" {
         ],
         "runcmd": [
           "mkdir /etc/wireguard && chmod 0700 /etc/wireguard",
-		  "mkdir -p /var/lib/rancher/k3s/server/manifests",
-		  "chmod 700 /var/lib/rancher/k3s/server",
-		  "chmod 700 /var/lib/rancher/k3s/server/manifests",
-		  "sysctl -w net.ipv4.conf.all.src_valid_mark=1",
-		  "curl -sfL https://get.k3s.io | sh -s - --disable=traefik"
+          "mkdir -p /var/lib/rancher/k3s/server/manifests",
+          "chmod 700 /var/lib/rancher/k3s/server",
+          "chmod 700 /var/lib/rancher/k3s/server/manifests",
+          "sysctl -w net.ipv4.conf.all.src_valid_mark=1",
+          "curl -sfL https://get.k3s.io | sh -s - --disable=traefik"
         ]
       }
     )
@@ -139,14 +139,14 @@ locals {
 
   # Wireguard Kubernetes deployment manifest
   wg_deployment = templatefile("${path.module}/assets/wireguard.tpl", {
-	app_name       = var.app_name
+    app_name       = var.app_name
     domain_name    = var.domain_name
     wg_subnet_cidr = var.wg_subnet_cidr
   })
 
   # Caddy webserver Kuberentes deployment manifest
   caddy_deployment = templatefile("${path.module}/assets/caddy.tpl", {
-	app_name      = var.app_name
+    app_name      = var.app_name
     domain_name   = var.domain_name
     http_password = random_password.caddy.bcrypt_hash
   })
