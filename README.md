@@ -2,21 +2,36 @@
 
 ## Description
 
-Creates a server on Hetzner Online and deploys Wireguard.
+Creates a server on Hetzner Cloud and deploys Wireguard on K3s.
 
 ## Usage
 
-Example `terraform.tfvars`
+Example `terraform.tfvars`:
 
 ```
-hcloud_token = "API_TOKEN"
-domain_name  = "mydomain.com"
-datacenter   = "hil-dc1"
-secret_path  = "/path/to/secrets"
+# App name used for labels
+app_name = "wireguard"
+
+# Domain for Wireguard client config URL
+domain_name = "wg.domain.com"
+
+# Wireguard internal network
+wg_subnet_cidr = "192.168.10.0/24"
+
+# Server variables
+server_name = "wireguard"
+server_type = "cpx11"
+image       = "ubuntu-22.04"
+datacenter  = "hil-dc1"
+
+# Path variables
+secrets_path = "./secrets"
 ```
 
-Stores SSH keys in `secrets_path` and outputs URLs and credentials to the Wireguard client config.
+Stores SSH keys in `secrets_path` and outputs URLs and HTTP credentials to the Wireguard client config.
 
-## Notes
+## TODO
 
-* Wireguard configuration may not survive a server reboot at this time.
+* Add Cloudflare resource to automatically add returned IP to DNS record.
+* Add an indicator  when backend setup is complete and URL is accessible.
+* Set better default variable values along with documentation.
