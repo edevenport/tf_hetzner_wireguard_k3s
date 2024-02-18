@@ -2,16 +2,7 @@
 # Providers
 # ------------------------------------------------------------------------------
 terraform {
-  required_providers {
-    hcloud = {
-      source = "hetznercloud/hcloud"
-    }
-  }
-  required_version = ">= 0.13"
-}
-
-provider "hcloud" {
-  token = var.hcloud_token
+  required_version = ">= 1.7"
 }
 
 # ------------------------------------------------------------------------------
@@ -21,4 +12,19 @@ module "ssh_keygen" {
   source = "github.com/edevenport/tf_ssh_keygen"
 
   ssh_key_path = var.secrets_path
+}
+
+module "infrastructure" {
+  source = "./modules/hcloud"
+
+  app_name     = var.app_name
+  datacenter   = var.datacenter
+  hcloud_token = var.hcloud_token
+  image        = var.image
+  server_name  = var.server_name
+  server_type  = var.server_type
+  user_data    = data.cloudinit_config.wireguard_host.rendered
+
+  ssh_private_key = module.ssh_keygen.private_key
+  ssh_public_key  = module.ssh_keygen.public_key
 }
