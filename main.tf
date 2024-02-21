@@ -28,3 +28,14 @@ module "infrastructure" {
   ssh_private_key = module.ssh_keygen.private_key
   ssh_public_key  = module.ssh_keygen.public_key
 }
+
+module "cloudflare_dns" {
+  source = "./modules/cloudflare_dns"
+
+  cloudflare_token = var.cloudflare_token
+  hostname         = var.hostname
+  domain_name      = var.domain_name
+
+  ipv4_address = module.infrastructure.ipv4_address
+  ipv6_address = module.infrastructure.ipv6_address
+}

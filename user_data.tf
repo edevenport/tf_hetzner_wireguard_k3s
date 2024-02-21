@@ -6,7 +6,6 @@ data "cloudinit_config" "wireguard_host" {
     content_type = "text/cloud-config"
     content      = yamlencode(
       {
-        # "packages": ["podman"],
         "write_files": [
           {
             "path": "/var/lib/rancher/k3s/server/manifests/wireguard.yaml",
@@ -42,19 +41,20 @@ resource "random_password" "caddy" {
 # Local variables
 # ------------------------------------------------------------------------------
 locals {
+  fqdn            = "${var.hostname}.${var.domain_name}"
   wg_netmask_bits = split("/", var.wg_subnet_cidr)[1]
 
   # Wireguard Kubernetes deployment manifest
   wg_deployment = templatefile("${path.module}/assets/wireguard.tpl", {
     app_name       = var.app_name
-    domain_name    = var.domain_name
+    fqdn           = local.fqdn
     wg_subnet_cidr = var.wg_subnet_cidr
   })
 
   # Caddy webserver Kuberentes deployment manifest
   caddy_deployment = templatefile("${path.module}/assets/caddy.tpl", {
     app_name      = var.app_name
-    domain_name   = var.domain_name
+    fqdn          = local.fqdn
     http_password = random_password.caddy.bcrypt_hash
   })
 }
