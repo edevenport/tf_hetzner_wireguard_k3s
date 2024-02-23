@@ -18,7 +18,7 @@ metadata:
   namespace: ${app_name}
 data:
   Caddyfile: |
-    ${fqdn} {
+    ${conf_fqdn} {
       handle_path /* {
         basicauth {
           wg ${http_password}

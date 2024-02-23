@@ -25,7 +25,7 @@ data:
   PUID: "1000"
   PGID: "1000"
   TZ: "America/Los_Angeles"
-  SERVERURL: ${fqdn}
+  SERVERURL: ${wg_fqdn}
   SERVERPORT: "51820"
   PEERS: "1"
   PEERDNS: "auto"

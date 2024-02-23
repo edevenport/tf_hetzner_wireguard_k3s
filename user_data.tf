@@ -1,10 +1,10 @@
 # ------------------------------------------------------------------------------
 # Data sources
 # ------------------------------------------------------------------------------
-data "cloudinit_config" "wireguard_host" {
+data "cloudinit_config" "main" {
   part {
     content_type = "text/cloud-config"
-    content      = yamlencode(
+    content = yamlencode(
       {
         "write_files": [
           {
@@ -41,20 +41,20 @@ resource "random_password" "caddy" {
 # Local variables
 # ------------------------------------------------------------------------------
 locals {
-  fqdn            = "${var.hostname}.${var.domain_name}"
-  wg_netmask_bits = split("/", var.wg_subnet_cidr)[1]
+  wg_fqdn   = join(".", [var.wireguard_hostname, var.domain_name])
+  conf_fqdn = join(".", [var.conf_hostname, var.domain_name])
 
   # Wireguard Kubernetes deployment manifest
   wg_deployment = templatefile("${path.module}/assets/wireguard.tpl", {
-    app_name       = var.app_name
-    fqdn           = local.fqdn
-    wg_subnet_cidr = var.wg_subnet_cidr
+    app_name              = var.app_name
+    wg_fqdn               = local.wg_fqdn
+    wg_subnet_cidr        = var.wireguard_subnet_cidr
   })
 
   # Caddy webserver Kuberentes deployment manifest
   caddy_deployment = templatefile("${path.module}/assets/caddy.tpl", {
     app_name      = var.app_name
-    fqdn          = local.fqdn
+    conf_fqdn     = var.cloudflare_https ? "http://:80" : local.conf_fqdn
     http_password = random_password.caddy.bcrypt_hash
   })
 }

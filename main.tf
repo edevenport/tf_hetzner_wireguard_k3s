@@ -15,27 +15,49 @@ module "ssh_keygen" {
 }
 
 module "infrastructure" {
-  source = "./modules/hcloud"
+  source = "github.com/edevenport/tf_hcloud"
 
   app_name     = var.app_name
   datacenter   = var.datacenter
   hcloud_token = var.hcloud_token
   image        = var.image
   server_name  = var.server_name
-  server_type  = var.server_type
-  user_data    = data.cloudinit_config.wireguard_host.rendered
+  user_data    = data.cloudinit_config.main.rendered
 
   ssh_private_key = module.ssh_keygen.private_key
   ssh_public_key  = module.ssh_keygen.public_key
 }
 
 module "cloudflare_dns" {
-  source = "./modules/cloudflare_dns"
+  # source = "github.com/edevenport/tf_cloudflare_dns"
+  source = "../tf_cloudflare_dns"
 
   cloudflare_token = var.cloudflare_token
-  hostname         = var.hostname
   domain_name      = var.domain_name
 
-  ipv4_address = module.infrastructure.ipv4_address
-  ipv6_address = module.infrastructure.ipv6_address
+  # Wireguard connections (UDP) cannot be proxied by Cloudflare.
+  records = [
+    {
+      hostname   = "wg"
+      type       = "A"
+      ip_address = module.infrastructure.ipv4_address
+    },
+    {
+      hostname   = "wg"
+      type       = "AAAA"
+      ip_address = module.infrastructure.ipv6_address
+    },
+    {
+      hostname   = "config"
+      type       = "A"
+      ip_address = module.infrastructure.ipv4_address
+      proxied    = true
+    },
+    {
+      hostname   = "config"
+      type       = "AAAA"
+      ip_address = module.infrastructure.ipv6_address
+      proxied    = true
+    }
+  ]
 }
