@@ -1,8 +1,8 @@
-# tf_hetzner_wireguard
+# tf_hetzner_wireguard_k3s
 
 ## Description
 
-Creates a server on Hetzner Cloud and deploys Wireguard on K3s.
+Creates a server on Hetzner Cloud and deploys Wireguard on K3s. The output includes a URL and credentials where the client config can be retrieved.
 
 ## Usage
 
@@ -16,22 +16,24 @@ app_name = "wireguard"
 domain_name = "wg.domain.com"
 
 # Wireguard internal network
-wg_subnet_cidr = "192.168.10.0/24"
+wireguard_subnet_cidr = "192.168.10.0/24"
 
 # Server variables
 server_name = "wireguard"
 server_type = "cpx11"
-image       = "ubuntu-22.04"
+image       = "debian-12"
 datacenter  = "hil-dc1"
 
 # Path variables
 secrets_path = "./secrets"
+
+# Allow Cloudflare to automatically update DNS records.
+cloudflare_https = true
 ```
 
 Stores SSH keys in `secrets_path` and outputs URLs and HTTP credentials to the Wireguard client config.
 
 ## TODO
 
-* Add Cloudflare resource to automatically add returned IP to DNS record.
 * Add an indicator  when backend setup is complete and URL is accessible.
 * Set better default variable values along with documentation.

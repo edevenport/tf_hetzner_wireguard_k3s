@@ -1,3 +1,8 @@
+variable "app_name" {
+  type    = string
+  default = "wireguard"
+}
+
 variable "hcloud_token" {
   description = "Hetzner Cloud API token."
   type        = string
@@ -21,9 +26,10 @@ variable "domain_name" {
   type        = string
 }
 
-variable "app_name" {
-  type    = string
-  default = "wireguard"
+variable "image" {
+  description = "Host image to use for server node."
+  type        = string
+  default     = "debian-12"
 }
 
 variable "wireguard_hostname" {
@@ -50,7 +56,6 @@ variable "wireguard_subnet_cidr" {
 }
 
 variable "datacenter" {}
-variable "image" {}
 variable "secrets_path" {}
 variable "server_name" {}
 variable "server_type" {}
